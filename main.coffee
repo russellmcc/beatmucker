@@ -49,6 +49,9 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
   # this buffer holds the delay.
   delayBuff = new AudioletBuffer 1, amen.length
   
+  # maximum delay in seconds
+  maxDelay = (beatsToSeconds 8)
+  
   drawDelayBuff = (audiolet) ->
     # fill BG
     canvas = $('#delaygraph')[0]
@@ -66,16 +69,23 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
         pixels = samples / amen.length * cWidth
         context.moveTo pixels, 0
         context.lineTo pixels, cHeight
+        
+        seconds = beatsToSeconds line
+        pixels = seconds / maxDelay * cHeight
+        context.moveTo 0, pixels
+        context.lineTo cWidth, pixels
+        
       context.stroke()
       
     # draw delay line
     context.strokeStyle = delayLineStyle
+    context.lineWidth = 3
     context.beginPath()
     context.moveTo 0, cHeight
     for x in [0...cWidth]
       samples = Math.floor (x/cWidth * amen.length)
       delay = delayBuff.channels[0][samples]
-      context.lineTo x, cHeight * (1 - delay / (beatsToSeconds 8))
+      context.lineTo x, cHeight * (1 - delay / maxDelay)
     context.stroke()
     
   AudioletApp = =>
@@ -94,7 +104,7 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
       delayBuff.channels[0][i] = beatsToSeconds beats[beat]
   
 
-    @delay = new Delay @audiolet, (beatsToSeconds 8), 0
+    @delay = new Delay @audiolet, maxDelay, 0
     
     @delayBuffPlayer = new BufferPlayer @audiolet, delayBuff, 1, 0, 1
 
