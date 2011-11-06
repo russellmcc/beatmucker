@@ -143,7 +143,7 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
 
     @player = new BufferPlayer @audiolet, amen, 1, 0, 1
     @player.connect @delay
-    @delayBuffPlayer.connect @lpf
+    @delayBuffPlayer.connect @delay, 0, 1
 
     @delay.connect @audiolet.output
     drawDelayBuff @audiolet
