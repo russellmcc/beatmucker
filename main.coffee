@@ -139,15 +139,14 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
       xhr = new XMLHttpRequest()
       reader = new FileReader()
       file = document.getElementById('file').files[0]
-      reader.onprogress = ->
-        console.log 'progress'
       reader.onerror = ->
         console.log 'error'
       reader.onload = (buffer) =>
         decoder = null
         decoded = null
+        console.log file.type
         # okay, we need to stop the @audiolet and restart it.
-        if file.type is 'audio/wav'
+        if (file.type is 'audio/wav') or (file.type is 'audio/x-wav')
           decoder = new WAVDecoder()
           decoded = decoder.decode(reader.result)
         else if file.type is 'audio/aiff'
@@ -167,8 +166,6 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
           drawDelayBuff @audiolet
           
       reader.readAsBinaryString file
-      
-      console.log reader
       
       return false
     
