@@ -3,6 +3,7 @@ cHeight = 300
 delayLineStyle = 'rgb(250,2,60)'
 barLinesStyle = 'rgb(200,255,0)'
 bgStyle = 'rgb(4,0,4)'
+waveformStyle = '#716D6D'
 
 require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pollutes globally
 
@@ -55,18 +56,29 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
         context.lineTo cWidth, pixels
         
       context.stroke()
-      
+
+    # draw a stupid overview
+    context.strokeStyle = waveformStyle
+    context.lineWidth = 1
+    for x in [0...cWidth]
+      samples = Math.floor (x/cWidth * amen.length)
+      overview = Math.abs(amen.channels[0][samples])
+      context.moveTo x, cHeight / 2 - overview * cHeight / 2
+      context.lineTo x, cHeight / 2 + overview * cHeight / 2
+    context.stroke()
+    
     # draw delay line
     context.strokeStyle = delayLineStyle
     context.lineWidth = 3
     context.beginPath()
     context.moveTo 0, cHeight
+    
     for x in [0...cWidth]
       samples = Math.floor (x/cWidth * amen.length)
       delay = delayBuff.channels[0][samples]
       context.lineTo x, cHeight * (1 - delay / maxDelay)
     context.stroke()
-
+      
   leftDown = false
   lastPos = null
   
