@@ -3698,17 +3698,21 @@ Delay.prototype.generate = function(inputBuffers, outputBuffers) {
             var inputChannel = inputChannels[j];
             var outputChannel = outputChannels[j];
             var buffer = buffers[j];
-            outputChannel[i] = buffer[readWriteIndex];
             if (!inputBuffer.isEmpty) {
                 buffer[readWriteIndex] = inputChannel[i];
             }
             else {
                 buffer[readWriteIndex] = 0;
             }
+            var ind = readWriteIndex - delayTime;
+            if (ind < 0) {
+                ind += maximumDelayTime * sampleRate;
+            }
+            outputChannel[i] = buffer[ind];
         }
 
         readWriteIndex += 1;
-        if (readWriteIndex >= delayTime) {
+        if (readWriteIndex >= maximumDelayTime * sampleRate) {
             readWriteIndex = 0;
         }
     }
