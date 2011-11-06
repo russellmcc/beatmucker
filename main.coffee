@@ -134,6 +134,44 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
           delayBuff.channels[0][i] = (cHeight - pos.y) / cHeight * maxDelay
         drawDelayBuff @audiolet
         lastPos = pos
+        
+    $('#fileform').submit () =>
+      xhr = new XMLHttpRequest()
+      reader = new FileReader()
+      file = document.getElementById('file').files[0]
+      reader.onprogress = ->
+        console.log 'progress'
+      reader.onerror = ->
+        console.log 'error'
+      reader.onload = (buffer) =>
+        decoder = null
+        decoded = null
+        # okay, we need to stop the @audiolet and restart it.
+        if file.type is 'audio/wav'
+          decoder = new WAVDecoder()
+          decoded = decoder.decode(reader.result)
+        else if file.type is 'audio/aiff'
+          decoder = new AIFFDecoder()
+          decoded = decoder.decode(reader.result)
+        
+        if decoded?
+          amen.length = decoded.length
+          amen.numberofChanels = decoded.channels.length
+          amen.unslicedChannels = decoded.channels;
+          amen.channels = decoded.channels;
+          newDelayBuff = new AudioletBuffer 1, amen.length
+          delayBuff.length = newDelayBuff.length
+          delayBuff.numberofChanels = newDelayBuff.channels.length
+          delayBuff.unslicedChannels = newDelayBuff.channels;
+          delayBuff.channels = newDelayBuff.channels;
+          drawDelayBuff @audiolet
+          
+      reader.readAsBinaryString file
+      
+      console.log reader
+      
+      return false
+    
     @audiolet = new Audiolet()
     @audiolet.scheduler.setTempo bpm
 
