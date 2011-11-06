@@ -8,20 +8,22 @@
         <link rel="stylesheet" href="main.css" />
     </head>
     <body>
+
+        
+        <canvas height="300" width="700" id="delaygraph"></canvas>
+        
         <form>
-            BPM: <input type="text" id="bpm" value="138" onKeyPress="return event.which!=13"/>
+            BPM (adjust da grid lines): <input type="text" id="bpm" value="138" onKeyPress="return event.which!=13"/>
         </form>
         
         <br/>
         
         <form id="fileform">
-            Upload new file: <input type="file" id="file"/>
+            Muck a wav or aiff: <input type="file" id="file"/>
             <input type="submit" value="do it!">
         </form>
         
         <br/>
-        
-        <canvas height="300" width="700" id="delaygraph"/>
     </body>
 </html>
 

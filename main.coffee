@@ -1,8 +1,8 @@
 cWidth = 700
 cHeight = 300
-barLinesStyle = 'rgb(0,200,0)'
-delayLineStyle = 'rgb(0,0,200)'
-bgStyle = 'rgb(200,0,0)'
+delayLineStyle = 'rgb(250,2,60)'
+barLinesStyle = 'rgb(200,255,0)'
+bgStyle = 'rgb(4,0,4)'
 
 require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pollutes globally
 
@@ -65,7 +65,7 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
       context.strokeStyle = barLinesStyle
       context.lineWidth = 1
       context.beginPath()
-      for line in [0...totalNumBeats]
+      for line in [0..totalNumBeats]
         samples = beatsToSamples audiolet, line
         pixels = samples / amen.length * cWidth
         context.moveTo pixels, 0
