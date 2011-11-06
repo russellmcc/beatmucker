@@ -4,6 +4,7 @@ delayLineStyle = 'rgb(250,2,60)'
 barLinesStyle = 'rgb(200,255,0)'
 bgStyle = 'rgb(4,0,4)'
 waveformStyle = '#716D6D'
+wiperStyle = '#4b000f'
 
 require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pollutes globally
 
@@ -31,7 +32,7 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
   # maximum delay in seconds
   maxDelay = (beatsToSeconds 8)
   
-  drawDelayBuff = (audiolet) ->
+  drawDelayBuff = (audiolet, wiper) ->
     # fill BG
     canvas = $('#delaygraph')[0]
     context = canvas.getContext('2d')
@@ -72,13 +73,21 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
     context.lineWidth = 3
     context.beginPath()
     context.moveTo 0, cHeight
-    
     for x in [0...cWidth]
       samples = Math.floor (x/cWidth * amen.length)
       delay = delayBuff.channels[0][samples]
       context.lineTo x, cHeight * (1 - delay / maxDelay)
     context.stroke()
-      
+    
+    # draw wiper
+    context.strokeStyle = wiperStyle
+    context.lineWidth = 6
+    if wiper?
+      context.beginPath()
+      context.moveTo wiper * cWidth, 0
+      context.lineTo wiper * cWidth, cHeight
+      context.stroke()
+
   leftDown = false
   lastPos = null
   
@@ -158,6 +167,10 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
       reader.readAsBinaryString file
       
       return false
+    
+    setInterval( (() =>
+        drawDelayBuff @audiolet, @delayBuffPlayer.position / amen.length
+        ), 30)
     
     @audiolet = new Audiolet()
     @audiolet.scheduler.setTempo bpm
