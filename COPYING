@@ -1,3 +1,11 @@
+This project uses source from the "Audiolet" authors.  "Audiolet" is copywrite the authors of "Audiolet"
+and licensed here under the apache license.
+
+------
+
+For code original to this project: (i.e., the "main.coffee" file, the "index.htm" file,
+ modifications to "Audiolet.js", we use a non-attribution free license:
+
 Permission is hereby granted, free of charge, to any person or organization
 obtaining a copy of the software and accompanying documentation covered by
 this license (the "Software") to use, reproduce, display, distribute,
@@ -12,5 +20,3 @@ SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
 FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-
-Some Portions under other licenses - see source for details.

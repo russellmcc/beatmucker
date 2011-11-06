@@ -5,25 +5,41 @@
         <title>SYNTH!</title>
         <!-- Development -->
         <script data-main="cs!main" src="require-jquery.js"></script>
-        <link rel="stylesheet" href="main.css" />
+        <link rel="stylesheet/less" type="text/css" href="bootstrap/bootstrap.less">
+        <script src="less.js" type="text/javascript"></script>
+        
     </head>
     <body>
-
-        
+    <div class="container">
+    <section id="main">
+    <div class="page-header"> 
+        <h1> BeatMucker 
+        <br><small>Muck your beats by dragging around on this graph </small>
+        </h1>
+    </div>
+    <div class="row">
+    <div class="span12 offset2">
+        <center>
         <canvas height="300" width="700" id="delaygraph"></canvas>
+        </center>
+        <p/>
         
         <form>
-            BPM (adjust da grid lines): <input type="text" id="bpm" value="138" onKeyPress="return event.which!=13"/>
+            BPM (adjust those grid lines): <input type="text" id="bpm" value="138" onKeyPress="return event.which!=13"/>
         </form>
         
         <br/>
         
         <form id="fileform">
-            Muck a wav or aiff: <input type="file" id="file"/>
-            <input type="submit" value="do it!">
+            Muck a wav or aiff: <input class="input-file" type="file" id="file"/>
+            <input class="btn" type="submit" value="do it!">
         </form>
         
-        <br/>
+        <br style="clear:both;">
+    </div>
+    </div>
+    </section>
+    </div>
     </body>
 </html>
 
