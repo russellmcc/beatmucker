@@ -100,11 +100,19 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
       lastPos = null
       
   AudioletApp = =>
-    $('#bpm').change =>
+    changebpm = () =>
       bpm = $('#bpm').val()
       @audiolet.scheduler.setTempo bpm
       drawDelayBuff @audiolet
       
+    $('#bpm').change =>
+      changebpm()
+      
+    $('#bpm').keypress (e) =>
+        if e.charCode == 13
+          changebpm() 
+          e.preventDefault()
+
     $(document).mousemove (e) =>
       if leftDown
         pos = {
