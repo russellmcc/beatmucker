@@ -71,7 +71,7 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
         context.lineTo pixels, cHeight
         
         seconds = beatsToSeconds line
-        pixels = seconds / maxDelay * cHeight
+        pixels = (1 - seconds / maxDelay) * cHeight
         context.moveTo 0, pixels
         context.lineTo cWidth, pixels
         
