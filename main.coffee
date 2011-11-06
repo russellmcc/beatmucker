@@ -108,7 +108,13 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
     $('#bpm').change =>
       changebpm()
       
+    $('#bpm').submit (e) =>
+      e.preventDefault()
+      changebpm()
+      
     $('#bpm').keypress (e) =>
+        console.log e
+        e.preventDefault()
         if e.which == 13
           changebpm() 
           e.preventDefault()
