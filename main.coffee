@@ -109,7 +109,7 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
       changebpm()
       
     $('#bpm').keypress (e) =>
-        if e.charCode == 13
+        if e.which == 13
           changebpm() 
           e.preventDefault()
 
