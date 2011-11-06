@@ -3682,7 +3682,7 @@ Delay.prototype.generate = function(inputBuffers, outputBuffers) {
         outputChannels.push(outputBuffer.getChannelData(i));
         // Create buffer for channel if it doesn't already exist
         if (i >= buffers.length) {
-            var bufferSize = maximumDelayTime * sampleRate;
+            var bufferSize = Math.floor(maximumDelayTime * sampleRate);
             buffers.push(new Float32Array(bufferSize));
         }
     }
@@ -3693,6 +3693,8 @@ Delay.prototype.generate = function(inputBuffers, outputBuffers) {
         if (delayTimeChannel) {
             delayTime = Math.floor(delayTimeChannel[i] * sampleRate);
         }
+        
+        totalLength = Math.floor(maximumDelayTime * sampleRate)
 
         for (var j = 0; j < numberOfChannels; j++) {
             var inputChannel = inputChannels[j];
@@ -3706,13 +3708,13 @@ Delay.prototype.generate = function(inputBuffers, outputBuffers) {
             }
             var ind = readWriteIndex - delayTime;
             if (ind < 0) {
-                ind += maximumDelayTime * sampleRate;
+                ind += totalLength;
             }
             outputChannel[i] = buffer[ind];
         }
 
         readWriteIndex += 1;
-        if (readWriteIndex >= maximumDelayTime * sampleRate) {
+        if (readWriteIndex >= totalLength) {
             readWriteIndex = 0;
         }
     }

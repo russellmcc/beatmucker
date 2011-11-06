@@ -63,6 +63,7 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
     totalNumBeats = Math.floor(samplesToBeats audiolet, amen.length)
     if totalNumBeats < cWidth 
       context.strokeStyle = barLinesStyle
+      context.lineWidth = 1
       context.beginPath()
       for line in [0...totalNumBeats]
         samples = beatsToSamples audiolet, line
@@ -87,34 +88,63 @@ require ["Audiolet", "audiofile"], (AudioLetLib, audiofilelib) -> # AudioLet pol
       delay = delayBuff.channels[0][samples]
       context.lineTo x, cHeight * (1 - delay / maxDelay)
     context.stroke()
-    
+
+  leftDown = false
+  lastPos = null
+  
+  $(document).mousedown (e) ->
+    if e.which is 1 then leftDown = true 
+  
+  $(document).mouseup (e) ->
+    if e.which is 1
+      leftDown = false 
+      lastPos = null
+      
   AudioletApp = =>
     $('#bpm').change =>
       bpm = $('#bpm').val()
       @audiolet.scheduler.setTempo bpm
       drawDelayBuff @audiolet
       
+    $(document).mousemove (e) =>
+      if leftDown
+        pos = {
+         x : e.pageX - $('#delaygraph').offset().left
+         y : e.pageY - $('#delaygraph').offset().top
+        }
+        
+        # out of bounds
+        pos.x = 0 if pos.x < 0
+        pos.x = cWidth if pos.x > cWidth
+        pos.y = 0 if pos.y < 0
+        pos.y = cHeight if pos.y > cHeight
+        
+        # update the delay.
+        if lastPos?
+          if lastPos.x > pos.x
+            samples = Math.floor (pos.x/cWidth * amen.length)
+            toSamples = Math.floor ((lastPos.x + 1)/cWidth * amen.length)
+          else
+            samples = Math.floor (lastPos.x/cWidth * amen.length)
+            toSamples = Math.floor ((pos.x + 1)/cWidth * amen.length)       
+        else
+          samples = Math.floor (pos.x/cWidth * amen.length)
+          toSamples = Math.floor((pos.x+1)/cWidth * amen.length)
+        for i in [samples..toSamples]
+          delayBuff.channels[0][i] = (cHeight - pos.y) / cHeight * maxDelay
+        drawDelayBuff @audiolet
+        lastPos = pos
     @audiolet = new Audiolet()
     @audiolet.scheduler.setTempo bpm
-    
-    beats = [0, 0, 1, 2,  3, 4, 0, 0] 
-    for i in [0..delayBuff.length]
-      beat = Math.floor(samplesToBeats @audiolet, i)
-      beat = 0 if beat >= beats.length
-      delayBuff.channels[0][i] = beatsToSeconds beats[beat]
-  
 
     @delay = new Delay @audiolet, maxDelay, 0
     
     @delayBuffPlayer = new BufferPlayer @audiolet, delayBuff, 1, 0, 1
 
-    @resetTrig = new TriggerControl @audiolet
-        
-    
     @player = new BufferPlayer @audiolet, amen, 1, 0, 1
-    @resetTrig.connect @player, 0, 1
     @player.connect @delay
-    @delayBuffPlayer.connect @delay, 0, 1
+    @delayBuffPlayer.connect @lpf
+
     @delay.connect @audiolet.output
     drawDelayBuff @audiolet
     
